@@ -217,10 +217,8 @@ class DataTableComponent extends Component
     public function toggleRowSelection($rowId): void
     {
         if (in_array($rowId, $this->selectedRows)) {
-            // ✅ If already selected, remove it
             $this->selectedRows = array_diff($this->selectedRows, [$rowId]);
         } else {
-            // ✅ Otherwise, add it to the selection
             $this->selectedRows[] = $rowId;
         }
     }
