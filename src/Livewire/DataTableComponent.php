@@ -210,6 +210,22 @@ class DataTableComponent extends Component
     }
 
     /**
+     * Toggles the selection of a single row.
+     *
+     * @param int|string $rowId The ID of the row to toggle.
+     */
+    public function toggleRowSelection($rowId): void
+    {
+        if (in_array($rowId, $this->selectedRows)) {
+            // ✅ If already selected, remove it
+            $this->selectedRows = array_diff($this->selectedRows, [$rowId]);
+        } else {
+            // ✅ Otherwise, add it to the selection
+            $this->selectedRows[] = $rowId;
+        }
+    }
+
+    /**
      * Render the DataTable component.
      */
     public function render(): View
