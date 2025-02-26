@@ -33,18 +33,7 @@ Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular
    composer require ginkelsoft/datatables:dev-main
    ```
 
-2. **Optionally register** the service provider if not using auto-discovery:
-
-   ```php
-   // config/app.php
-
-   'providers' => [
-       // ...
-       Ginkelsoft\DataTables\DataTableServiceProvider::class,
-   ];
-   ```
-
-3. **Publish the package views** (optional) for customization:
+2. **Publish the package views** (optional) for customization:
 
    ```bash
    php artisan vendor:publish --provider="Ginkelsoft\\DataTables\\DataTableServiceProvider" --tag=views
