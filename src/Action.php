@@ -2,44 +2,40 @@
 
 namespace Ginkelsoft\DataTables;
 
-/**
- * Class representing an action that can be performed on a DataTable row.
- */
 class Action
 {
-    /** @var string The name of the action */
     public string $name;
-
-    /** @var string The label displayed for the action */
     public string $label;
-
-    /** @var string The route associated with the action */
     public string $route;
+    public array $attributes = [];
 
     /**
      * Action constructor.
      *
-     * @param string $name  The action name
-     * @param string $label The action label
-     * @param string $route The route associated with the action
+     * @param string $name Unique action name.
+     * @param string $label Button label.
+     * @param string $route Named route for the action.
+     * @param array $attributes Additional HTML attributes (e.g., classes, styles).
      */
-    public function __construct(string $name, string $label, string $route)
+    public function __construct(string $name, string $label, string $route, array $attributes = [])
     {
         $this->name = $name;
         $this->label = $label;
         $this->route = $route;
+        $this->attributes = $attributes;
     }
 
     /**
-     * Static method to create a new action instance.
+     * Factory method to create an action instance.
      *
-     * @param string $name  The action name
-     * @param string $label The action label
-     * @param string $route The route associated with the action
-     * @return self A new Action instance
+     * @param string $name Unique action name.
+     * @param string $label Button label.
+     * @param string $route Named route for the action.
+     * @param array $attributes Additional HTML attributes (e.g., classes, styles).
+     * @return self
      */
-    public static function make(string $name, string $label, string $route): self
+    public static function make(string $name, string $label, string $route, array $attributes = []): self
     {
-        return new self($name, $label, $route);
+        return new self($name, $label, $route, $attributes);
     }
 }
