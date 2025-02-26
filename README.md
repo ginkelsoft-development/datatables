@@ -71,14 +71,14 @@ You can now:
 
 ## Working with Actions
 
-### Row Actions
+### Row Actions with Custom Attributes
 
-Actions now support custom **classes** and **styles** for better UI customization:
+You can now add **custom CSS classes and HTML attributes** to actions:
 
 ```blade
 :actions="[
-    ['label' => 'Edit', 'route' => 'users.edit', 'class' => 'bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded', 'style' => 'margin-right: 5px;'],
-    ['label' => 'Delete', 'route' => 'users.destroy', 'class' => 'bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded']
+    ['label' => 'Edit', 'route' => 'users.edit', 'attributes' => ['class' => 'bg-green-500 text-white px-3 py-1 rounded']],
+    ['label' => 'Delete', 'route' => 'users.destroy', 'attributes' => ['class' => 'bg-red-500 text-white px-3 py-1 rounded', 'onclick' => 'return confirm(\'Are you sure?\')']]
 ]"
 ```
 
