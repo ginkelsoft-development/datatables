@@ -16,8 +16,8 @@ class DataTableServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Load package views
-        $this->loadViewsFrom(__DIR__ . '/Resources/views', 'datatable');
+        // Load package views from the correct
+        $this->loadViewsFrom(__DIR__ . '/../resources/views/vendor/datatables', 'datatable');
     }
 
     /**
@@ -32,9 +32,8 @@ class DataTableServiceProvider extends ServiceProvider
     {
         // Publish views to allow customization
         $this->publishes([
-            __DIR__ . '/Resources/views' => resource_path('views/vendor/datatables'),
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/datatables'),
         ], 'views');
-
         // Register the Livewire component for the DataTable
         Livewire::component('datatable', \Ginkelsoft\DataTables\Livewire\DataTableComponent::class);
     }

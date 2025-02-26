@@ -20,7 +20,7 @@ Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular
 ## Requirements
 
 - **PHP 8.2+**
-- **Laravel 10.0+**&#x20;
+- **Laravel 10.0+**
 - **Livewire** *(Optional, only if you need AJAX-driven data tables.)*
 
 ---
@@ -30,7 +30,7 @@ Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular
 1. **Require the package**:
 
    ```bash
-   composer require ginkelsoft/datatables:dev-main
+   composer require ginkelsoft/datatables
    ```
 
 2. **Publish the package views** (optional) for customization:
@@ -38,60 +38,6 @@ Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular
    ```bash
    php artisan vendor:publish --provider="Ginkelsoft\\DataTables\\DataTableServiceProvider" --tag=views
    ```
-
----
-
-## Usage (Without Livewire)
-
-For a traditional server-rendered app:
-
-```php
-use Ginkelsoft\DataTables\DataTable;
-use Ginkelsoft\DataTables\Column;
-use App\Models\User;
-
-public function index()
-{
-    $query = User::query();
-
-    $datatable = (new DataTable($query))
-        ->setColumns([
-            Column::make('id', 'ID'),
-            Column::make('name', 'Name'),
-            Column::make('email', 'Email'),
-        ])
-        ->setPerPage(10);
-
-    $rows = $datatable->getRows();
-
-    return view('users.index', compact('rows'));
-}
-```
-
-And in `resources/views/users/index.blade.php`:
-
-```blade
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($rows as $row)
-            <tr>
-                <td>{{ $row->id }}</td>
-                <td>{{ $row->name }}</td>
-                <td>{{ $row->email }}</td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
-
-{{ $rows->links() }}
-```
 
 ---
 
@@ -104,8 +50,8 @@ If you prefer an **AJAX-driven** workflow with real-time sorting, searching, and
     model="App\\Models\\User"
     :columns="['id', 'name', 'email']"
     :actions="[
-        ['label' => 'Edit', 'route' => 'users.edit'],
-        ['label' => 'Delete', 'route' => 'users.destroy']
+        ['label' => 'Edit', 'route' => 'users.edit', 'class' => 'bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded', 'style' => 'margin-right: 5px;'],
+        ['label' => 'Delete', 'route' => 'users.destroy', 'class' => 'bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded']
     ]"
     :bulkActions="[
         'delete' => ['label' => 'Delete', 'route' => 'users.bulk.delete'],
@@ -127,18 +73,20 @@ You can now:
 
 ### Row Actions
 
-Specify row-level actions in your Blade:
+Actions now support custom **classes** and **styles** for better UI customization:
 
 ```blade
 :actions="[
-    ['label' => 'Edit', 'route' => 'users.edit'],
-    ['label' => 'Delete', 'route' => 'users.destroy']
+    ['label' => 'Edit', 'route' => 'users.edit', 'class' => 'bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded', 'style' => 'margin-right: 5px;'],
+    ['label' => 'Delete', 'route' => 'users.destroy', 'class' => 'bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded']
 ]"
 ```
 
+These actions will be rendered as buttons with the specified styles.
+
 ### Bulk Actions
 
-For bulk actions (like deleting multiple rows) set `:bulkActions`:
+For bulk actions (like deleting multiple rows), define them as follows:
 
 ```blade
 :bulkActions="[
@@ -157,6 +105,8 @@ When multiple rows are selected, the component redirects to the specified route 
 - **Filter Class** for custom filters (status, categories, etc.).
 - **Sorting Class** for ascending/descending ordering.
 - **Select All** (with confirmation modal) to choose between only visible rows or all rows.
+- **Custom Actions** now support custom classes and inline styles.
+- **Prevent row selection when clicking an action button**, ensuring that clicking an action does not check the row checkbox.
 
 ---
 
