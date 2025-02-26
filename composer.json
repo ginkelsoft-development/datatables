@@ -1,0 +1,26 @@
+{
+  "name": "ginkelsoft/datatables",
+  "description": "A simple DataTable package for Laravel",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Ginkelsoft\\DataTables\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.0",
+    "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
+    "livewire/livewire": "^3.0"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Ginkelsoft\\DataTables\\DataTableServiceProvider"
+      ],
+      "aliases": {
+        "DataTable": "Ginkelsoft\\DataTables\\Facades\\DataTable"
+      }
+    }
+  }
+}
