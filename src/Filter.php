@@ -7,40 +7,75 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * Class Filter
  *
- * Handles filtering logic for DataTables.
+ * Handles filtering logic for DataTables. Supports different filter types such as text input,
+ * select dropdowns, checkboxes, and date ranges.
  */
 class Filter
 {
-    /**
-     * @var array<string, mixed> $filters
-     * Stores the filters applied to the DataTable.
-     */
-    protected array $filters = [];
+    /** @var string The column to apply the filter on */
+    public string $column;
+
+    /** @var string The type of filter (e.g., input, select, checkbox, date-range) */
+    public string $type;
+
+    /** @var mixed The filter value */
+    public mixed $value;
+
+    /** @var array Options for select and radio button filters */
+    public array $options;
 
     /**
-     * Add a filter to the query.
+     * Filter constructor.
      *
-     * @param string $column The column name to filter.
-     * @param mixed $value The value to filter by.
-     * @return self Returns the Filter instance for method chaining.
+     * @param string $column The column to filter.
+     * @param mixed $value The initial value of the filter.
+     * @param string $type The type of filter (default: 'input').
+     * @param array $options Options for select, radio, or other multi-choice filters.
      */
-    public function addFilter(string $column, mixed $value): self
+    public function __construct(string $column, mixed $value = '', string $type = 'input', array $options = [])
     {
-        $this->filters[$column] = $value;
-        return $this;
+        $this->column = $column;
+        $this->value = $value;
+        $this->type = $type;
+        $this->options = $options;
     }
 
     /**
-     * Apply filters to the given query.
+     * Apply the filter to the given query.
      *
      * @param Builder $query The Eloquent query builder instance.
-     * @return Builder Returns the modified query with applied filters.
+     * @return Builder The modified query with applied filters.
      */
     public function apply(Builder $query): Builder
     {
-        foreach ($this->filters as $column => $value) {
-            if (!is_null($value)) {
-                $query->where($column, 'like', "%{$value}%");
+        if (!empty($this->value)) {
+            switch ($this->type) {
+                case 'select':
+                    $query->where($this->column, $this->value);
+                    break;
+
+                case 'checkbox':
+                    $query->where($this->column, '=', (bool) $this->value);
+                    break;
+
+                case 'radio':
+                    $query->where($this->column, '=', $this->value);
+                    break;
+
+                case 'date-range':
+                    if (is_array($this->value)) {
+                        if (!empty($this->value['from'])) {
+                            $query->whereDate($this->column, '>=', $this->value['from']);
+                        }
+                        if (!empty($this->value['to'])) {
+                            $query->whereDate($this->column, '<=', $this->value['to']);
+                        }
+                    }
+                    break;
+
+                default:
+                    $query->where($this->column, 'like', "%{$this->value}%");
+                    break;
             }
         }
         return $query;

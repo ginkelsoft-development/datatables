@@ -16,7 +16,7 @@ class DataTableServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Load package views from the correct
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang/vendor/datatables', 'datatable');
         $this->loadViewsFrom(__DIR__ . '/../resources/views/vendor/datatables', 'datatable');
     }
 
@@ -30,11 +30,14 @@ class DataTableServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Publish views to allow customization
         $this->publishes([
             __DIR__ . '/../resources/views' => resource_path('views/vendor/datatables'),
         ], 'views');
-        // Register the Livewire component for the DataTable
+
+        $this->publishes([
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/datatables'),
+        ], 'lang');
+
         Livewire::component('datatable', \Ginkelsoft\DataTables\Livewire\DataTableComponent::class);
     }
 }

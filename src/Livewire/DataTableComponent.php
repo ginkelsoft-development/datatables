@@ -4,45 +4,49 @@ namespace Ginkelsoft\DataTables\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Ginkelsoft\DataTables\DataTable;
-use Ginkelsoft\DataTables\Column;
-use Ginkelsoft\DataTables\Sorting;
 use Ginkelsoft\DataTables\Search;
-use Ginkelsoft\DataTables\Filter;
-use Ginkelsoft\DataTables\Action;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 
+/**
+ * Class DataTableComponent
+ *
+ * A Livewire component for displaying and managing a DataTable.
+ * Supports searching, sorting, filtering, bulk actions, and row selection.
+ */
 class DataTableComponent extends Component
 {
     use WithPagination;
 
-    /** @var string The model associated with the datatable */
+    /** @var string The Eloquent model associated with the DataTable */
     public string $model;
 
-    /** @var array Columns to be displayed in the datatable */
+    /** @var array List of columns to be displayed */
     public array $columns = [];
 
-    /** @var array Actions available for the datatable rows */
+    /** @var array List of actions available for each row */
     public array $actions = [];
 
-    /** @var string The view path for row actions */
-    public string $actionsView = '';
+    /** @var string The Blade view file for displaying row actions */
+    public string $actionsView = 'datatable::actions';
 
-    /** @var string Search query entered by the user */
+    /** @var string The search query entered by the user */
     public string $search = '';
 
-    /** @var string The column to sort by */
+    /** @var string The column used for sorting */
     public string $sortColumn = 'id';
 
-    /** @var string Sorting direction (asc or desc) */
+    /** @var string The sorting direction ('asc' or 'desc') */
     public string $sortDirection = 'asc';
 
-    /** @var int Number of records per page */
+    /** @var int Number of rows per page */
     public int $perPage = 10;
 
-    /** @var array Filters applied to the dataset */
+    /** @var array Active filters applied to the DataTable */
     public array $filters = [];
+
+    /** @var bool Whether the filter panel is visible */
+    public bool $showFilters = false;
 
     /** @var array Selected row IDs for bulk actions */
     public array $selectedRows = [];
@@ -53,10 +57,10 @@ class DataTableComponent extends Component
     /** @var array Columns that should be hidden */
     public array $hiddenColumns = [];
 
-    /** @var array Bulk actions available for the datatable */
+    /** @var array Bulk actions available for the DataTable */
     public array $bulkActions = [];
 
-    /** @var string Currently selected bulk action */
+    /** @var string The currently selected bulk action */
     public string $bulkAction = '';
 
     /** @var bool Whether to show the select-all confirmation modal */
@@ -67,8 +71,24 @@ class DataTableComponent extends Component
 
     /**
      * Mount the DataTable component.
+     *
+     * @param string $model The model class name.
+     * @param array $columns List of table columns.
+     * @param array $actions Row actions.
+     * @param string $actionsView Blade view for row actions.
+     * @param array $hiddenColumns Columns that should be hidden.
+     * @param array $bulkActions Available bulk actions.
+     * @param array $filters Initial filters.
      */
-    public function mount(string $model, array $columns, array $actions = [], string $actionsView = '', array $hiddenColumns = [], array $bulkActions = []): void
+    public function mount(
+        string $model,
+        array  $columns,
+        array  $actions = [],
+        string $actionsView = 'datatable::actions',
+        array  $hiddenColumns = [],
+        array  $bulkActions = [],
+        array  $filters = []
+    ): void
     {
         $this->model = $model;
         $this->columns = $columns;
@@ -76,10 +96,32 @@ class DataTableComponent extends Component
         $this->actionsView = $actionsView;
         $this->hiddenColumns = $hiddenColumns;
         $this->bulkActions = $bulkActions;
+        $this->filters = $filters;
     }
 
     /**
-     * Toggle selection of all rows.
+     * Toggle the visibility of the filter panel.
+     */
+    public function toggleFilters(): void
+    {
+        $this->showFilters = !$this->showFilters;
+    }
+
+    /**
+     * Remove a specific filter by key.
+     *
+     * @param string $filterKey The key of the filter to remove.
+     */
+    public function removeFilter(string $filterKey): void
+    {
+        if (isset($this->filters[$filterKey]) && is_array($this->filters[$filterKey])) {
+            $this->filters[$filterKey]['value'] = '';
+        }
+        $this->resetPage();
+    }
+
+    /**
+     * Select or deselect all rows.
      */
     public function toggleSelectAll(): void
     {
@@ -93,6 +135,8 @@ class DataTableComponent extends Component
 
     /**
      * Confirm the selection of all rows or only visible rows.
+     *
+     * @param string $mode 'all' selects all rows, 'visible' selects only the current page.
      */
     public function confirmSelectAll(string $mode): void
     {
@@ -102,16 +146,18 @@ class DataTableComponent extends Component
             (new Search())->setSearch($this->search)->apply($query, $this->columns);
         }
 
-        $this->selectedRows = ($mode === 'all')
-            ? $query->pluck('id')->toArray()
-            : $this->getRows()->pluck('id')->toArray();
+        if ($mode === 'all') {
+            $this->selectedRows = $query->pluck('id')->toArray(); // 🔥 Selecteer *alle* rijen
+        } else {
+            $this->selectedRows = $this->getRows()->pluck('id')->toArray(); // 🔥 Alleen zichtbare rijen
+        }
 
         $this->selectAll = true;
-        $this->showSelectAllModal = false;
+        $this->showSelectAllModal = false; // 🔥 Sluit modal na selectie
     }
 
     /**
-     * Cancel the select all action and reset selection.
+     * Cancel the select-all action and reset selection.
      */
     public function cancelSelectAll(): void
     {
@@ -120,7 +166,9 @@ class DataTableComponent extends Component
     }
 
     /**
-     * Update the number of items per page.
+     * Update the number of rows per page.
+     *
+     * @param int $value New number of rows per page.
      */
     public function updatePerPage(int $value): void
     {
@@ -129,7 +177,7 @@ class DataTableComponent extends Component
     }
 
     /**
-     * Apply search filter.
+     * Apply search filter and reset pagination.
      */
     public function applySearch(): void
     {
@@ -137,7 +185,7 @@ class DataTableComponent extends Component
     }
 
     /**
-     * Reset search input and pagination.
+     * Reset the search input and pagination.
      */
     public function resetSearch(): void
     {
@@ -146,14 +194,13 @@ class DataTableComponent extends Component
     }
 
     /**
-     * Update sorting when a column header is clicked.
+     * Update sorting order when a column header is clicked.
+     *
+     * @param string $column The column to sort by.
      */
     public function sortBy(string $column): void
     {
-        $this->sortDirection = ($this->sortColumn === $column && $this->sortDirection === 'asc')
-            ? 'desc'
-            : 'asc';
-
+        $this->sortDirection = ($this->sortColumn === $column && $this->sortDirection === 'asc') ? 'desc' : 'asc';
         $this->sortColumn = $column;
         $this->resetPage();
     }
@@ -167,7 +214,20 @@ class DataTableComponent extends Component
     }
 
     /**
-     * Retrieve paginated rows.
+     * Reset all applied filters.
+     */
+    public function resetFilters(): void
+    {
+        foreach ($this->filters as $key => $filter) {
+            $this->filters[$key]['value'] = '';
+        }
+        $this->resetPage();
+    }
+
+    /**
+     * Retrieve paginated rows with applied filters, search, and sorting.
+     *
+     * @return LengthAwarePaginator The paginated dataset.
      */
     public function getRows(): LengthAwarePaginator
     {
@@ -177,9 +237,9 @@ class DataTableComponent extends Component
             (new Search())->setSearch($this->search)->apply($query, $this->columns);
         }
 
-        foreach ($this->filters as $column => $value) {
-            if (!empty($value)) {
-                $query->where($column, 'like', "%{$value}%");
+        foreach ($this->filters as $column => $filter) {
+            if (!empty($filter['value'])) {
+                $query->where($column, 'like', "%{$filter['value']}%");
             }
         }
 
@@ -197,22 +257,16 @@ class DataTableComponent extends Component
             return;
         }
 
-        if (!isset($this->bulkActions[$this->bulkAction]['route'])) {
-            return;
-        }
-
-        $route = $this->bulkActions[$this->bulkAction]['route'];
-
-        redirect()->route($route, [
+        redirect()->route($this->bulkActions[$this->bulkAction]['route'], [
             'model' => $this->model,
             'ids' => implode(',', $this->selectedRows)
         ]);
     }
 
     /**
-     * Toggles the selection of a single row.
+     * Toggle selection of a single row.
      *
-     * @param int|string $rowId The ID of the row to toggle.
+     * @param int|string $rowId The row ID to toggle.
      */
     public function toggleRowSelection($rowId): void
     {
@@ -225,6 +279,8 @@ class DataTableComponent extends Component
 
     /**
      * Render the DataTable component.
+     *
+     * @return View The rendered view.
      */
     public function render(): View
     {
@@ -239,6 +295,7 @@ class DataTableComponent extends Component
             'showSelectAllModal' => $this->showSelectAllModal,
             'bulkActions' => $this->bulkActions,
             'bulkAction' => $this->bulkAction,
+            'filters' => $this->filters
         ]);
     }
 }
