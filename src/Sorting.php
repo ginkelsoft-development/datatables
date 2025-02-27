@@ -1,8 +1,8 @@
 <?php
 
-namespace Ginkelsoft\\DataTables;
+namespace Ginkelsoft\DataTables;
 
-use Illuminate\\Database\\Eloquent\\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class Sorting
