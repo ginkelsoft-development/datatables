@@ -6,36 +6,30 @@ class Action
 {
     public string $name;
     public string $label;
-    public string $route;
+    public ?string $route;
+    public ?string $url;
     public array $attributes = [];
 
     /**
      * Action constructor.
-     *
-     * @param string $name Unique action name.
-     * @param string $label Button label.
-     * @param string $route Named route for the action.
-     * @param array $attributes Additional HTML attributes (e.g., classes, styles).
      */
-    public function __construct(string $name, string $label, string $route, array $attributes = [])
+    public function __construct(string $name, string $label, ?string $route = null, ?string $url = null, array $attributes = [])
     {
         $this->name = $name;
         $this->label = $label;
         $this->route = $route;
+        $this->url = $url;
         $this->attributes = $attributes;
     }
 
-    /**
-     * Factory method to create an action instance.
-     *
-     * @param string $name Unique action name.
-     * @param string $label Button label.
-     * @param string $route Named route for the action.
-     * @param array $attributes Additional HTML attributes (e.g., classes, styles).
-     * @return self
-     */
-    public static function make(string $name, string $label, string $route, array $attributes = []): self
+    public function toArray(): array
     {
-        return new self($name, $label, $route, $attributes);
+        return [
+            'name' => $this->name,
+            'label' => $this->label,
+            'route' => $this->route,
+            'url' => $this->url,
+            'attributes' => $this->attributes
+        ];
     }
 }
