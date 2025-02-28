@@ -1,6 +1,6 @@
 # Ginkelsoft DataTables
 
-Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular data in Laravel projects. It supports both a **base DataTable** class for traditional server-rendered apps and an **optional Livewire** component for dynamic, AJAX-driven experiences. You can easily add filtering, searching, sorting, and bulk actions with minimal setup.
+Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular data in Laravel projects. This package **requires Livewire** for dynamic, AJAX-driven experiences. You can easily add filtering, searching, sorting, and bulk actions with minimal setup.
 
 ---
 
@@ -8,13 +8,12 @@ Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular
 
 1. [Requirements](#requirements)
 2. [Installation](#installation)
-3. Usage
-4. Usage With Livewire
-5. [Filters](#filters)
-6. [Actions & Bulk Actions](#actions--bulk-actions)
-7. [Additional Features](#additional-features)
-8. [Contributing](#contributing)
-9. [License](#license)
+3. [Usage With Livewire](#usage-with-livewire)
+4. [Filters](#filters)
+5. [Actions & Bulk Actions](#actions--bulk-actions)
+6. [Additional Features](#additional-features)
+7. [Contributing](#contributing)
+8. [License](#license)
 
 ---
 
@@ -22,7 +21,7 @@ Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular
 
 - **PHP 8.2+**
 - **Laravel 10.0+**
-- **Livewire** *(Optional, only if you need AJAX-driven data tables.)*
+- **Livewire** *(Required for usage of this package.)*
 
 ---
 
@@ -42,98 +41,9 @@ Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular
 
 ---
 
-## Usage
-
-You can use this package in a standard Laravel Blade view without Livewire.
-
-### Example
-
-#### Controller:
-
-```php
-use Ginkelsoft\DataTables\DataTable;
-use Ginkelsoft\DataTables\Column;
-use Ginkelsoft\DataTables\Filters\TextFilter;
-use Ginkelsoft\DataTables\Filters\SelectFilter;
-use Ginkelsoft\DataTables\Filters\DateFilter;
-use Ginkelsoft\DataTables\Filters\BooleanFilter;
-use App\Models\User;
-
-public function index()
-{
-    $query = User::query();
-
-    $datatable = (new DataTable($query))
-        ->setColumns([
-            Column::make('id', 'ID'),
-            Column::make('name', 'Name'),
-            Column::make('email', 'Email'),
-        ])
-        ->setFilters([
-            new TextFilter('name'),
-            new SelectFilter('role', null, ['admin' => 'Admin', 'user' => 'User']),
-            new DateFilter('created_at'),
-            new BooleanFilter('active')
-        ])
-        ->setPerPage(10);
-
-    $rows = $datatable->getRows();
-
-    return view('users.index', compact('rows'));
-}
-```
-
-#### Blade Template:
-
-```blade
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($rows as $row)
-            <tr>
-                <td>{{ $row->id }}</td>
-                <td>{{ $row->name }}</td>
-                <td>{{ $row->email }}</td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
-
-{{ $rows->links() }}
-```
-
-### Actions & Bulk Actions
-
-#### Row Actions:
-
-```blade
-@foreach($rows as $row)
-    <a href="{{ route('users.edit', $row->id) }}" class="bg-blue-500 text-white px-3 py-1 rounded">Edit</a>
-    <a href="{{ route('users.destroy', $row->id) }}" class="bg-red-500 text-white px-3 py-1 rounded">Delete</a>
-@endforeach
-```
-
-#### Bulk Actions:
-
-```blade
-<form action="{{ route('users.bulk.delete') }}" method="POST">
-    @csrf
-    <input type="hidden" name="ids" value="{{ implode(',', $selectedRows) }}">
-    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete Selected</button>
-</form>
-```
-
----
-
 ## Usage With Livewire
 
-For an **AJAX-driven** workflow with real-time sorting, searching, and pagination:
+This package **requires Livewire** and cannot be used without it. To integrate DataTables in your Laravel project, use the following setup:
 
 ```blade
 <livewire:datatable
@@ -155,6 +65,52 @@ For an **AJAX-driven** workflow with real-time sorting, searching, and paginatio
     ]"
 />
 ```
+
+You can now:
+
+- **Search** by typing in the search field.
+- **Sort** by clicking column headers.
+- **Paginate** without page reload.
+- **Select rows** individually or choose to select all.
+
+---
+
+## Filters
+
+You can define various filters for refining results dynamically.
+
+```blade
+:filters="[
+    ['column' => 'name', 'type' => 'text'],
+    ['column' => 'role', 'type' => 'select', 'options' => ['admin' => 'Admin', 'user' => 'User']],
+    ['column' => 'created_at', 'type' => 'date'],
+    ['column' => 'active', 'type' => 'boolean']
+]"
+```
+
+---
+
+## Actions & Bulk Actions
+
+### Row Actions
+
+```blade
+:actions="[
+    ['label' => 'Edit', 'route' => 'users.edit', 'class' => 'bg-green-500 text-white px-3 py-1 rounded'],
+    ['label' => 'Delete', 'route' => 'users.destroy', 'class' => 'bg-red-500 text-white px-3 py-1 rounded', 'onclick' => 'return confirm(\'Are you sure?\')']
+]"
+```
+
+### Bulk Actions
+
+```blade
+:bulkActions="[
+    'delete' => ['label' => 'Delete', 'route' => 'users.bulk.delete'],
+    'export' => ['label' => 'Export', 'route' => 'users.bulk.export']
+]"
+```
+
+When multiple rows are selected, the component redirects to the specified route with `ids` in the query/string, so you can handle them in your controller.
 
 ---
 
@@ -183,4 +139,3 @@ We welcome improvements to code quality, new features, or better documentation.
 ## License
 
 Ginkelsoft DataTables is open-sourced software licensed under the [MIT license](LICENSE).
-
