@@ -66,6 +66,8 @@ class DataTableComponent extends Component
     /** @var bool Whether to show the select-all confirmation modal */
     public bool $showSelectAllModal = false;
 
+    public int $currentPage = 1;
+
     /** @var array Livewire event listeners */
     protected $listeners = ['refreshTable' => '$refresh'];
 
@@ -245,7 +247,52 @@ class DataTableComponent extends Component
 
         $query->orderBy($this->sortColumn, $this->sortDirection);
 
-        return $query->paginate($this->perPage);
+
+        $total = $query->count();
+        $rows = $query->skip(($this->currentPage - 1) * $this->perPage)->take($this->perPage)->get();
+
+        return new \Illuminate\Pagination\LengthAwarePaginator(
+            $rows,
+            $total,
+            $this->perPage,
+            $this->currentPage
+        );
+    }
+
+    /**
+     * Navigate to a specific page without modifying the URL.
+     *
+     * @param int $page The page number to navigate to.
+     */
+    public function gotoPage(int $page): void
+    {
+        $this->setPage($page, $this->getPaginationName());
+    }
+
+    /**
+     * Navigate to the previous page.
+     */
+    public function previousPage(): void
+    {
+        $this->setPage($this->page - 1, $this->getPaginationName());
+    }
+
+    /**
+     * Navigate to the next page.
+     */
+    public function nextPage(): void
+    {
+        $this->setPage($this->page + 1, $this->getPaginationName());
+    }
+
+    /**
+     * Get a unique pagination name for this DataTable instance.
+     *
+     * @return string The unique pagination name.
+     */
+    protected function getPaginationName(): string
+    {
+        return md5($this->model . implode(',', $this->columns));
     }
 
     /**
