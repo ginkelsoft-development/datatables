@@ -25,7 +25,7 @@
                 @endif
             </div>
 
-            @if(count($selectedRows) > 0)
+            @if(count($selectedRows) > 0 && count($bulkActions) > 0)
                 <div class="flex items-center gap-2">
                     @includeIf('datatable::components.bulk-action')
                 </div>
