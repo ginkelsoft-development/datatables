@@ -2,6 +2,7 @@
 
 namespace Ginkelsoft\DataTables\Livewire;
 
+use Ginkelsoft\DataTables\Action;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Ginkelsoft\DataTables\Search;
@@ -94,7 +95,7 @@ class DataTableComponent extends Component
     {
         $this->model = $model;
         $this->columns = $columns;
-        $this->actions = $actions;
+        $this->actions = array_map(fn($action) => $action instanceof Action ? $action->toArray() : $action, $actions);
         $this->actionsView = $actionsView;
         $this->hiddenColumns = $hiddenColumns;
         $this->bulkActions = $bulkActions;
