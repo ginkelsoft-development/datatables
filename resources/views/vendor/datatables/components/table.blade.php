@@ -2,10 +2,12 @@
     <table class="w-full min-w-max divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-sm hidden md:table">
         <thead class="bg-gray-50">
         <tr>
+            @if (count($bulkActions) > 0)
             <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 border">
                 <input type="checkbox" wire:click="toggleSelectAll"
                        class="h-5 w-5 text-blue-500 border-gray-300 rounded focus:ring-2 focus:ring-blue-400 transition">
             </th>
+            @endif
             @foreach($columns as $column)
                 @if(!in_array($column, $hiddenColumns))
                     <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 border cursor-pointer hover:bg-gray-100 transition"
@@ -34,12 +36,14 @@
         @foreach($rows as $row)
             <tr class="hover:bg-gray-100 transition cursor-pointer"
                 wire:click.prevent="toggleRowSelection({{ $row->id }})">
+                @if (count($bulkActions) > 0)
                 <td class="px-4 py-3 border">
                     <input type="checkbox" wire:model="selectedRows"
                            value="{{ $row->id }}"
                            class="h-5 w-5 text-blue-500 border-gray-300 rounded focus:ring-2 focus:ring-blue-400 transition"
                            onclick="event.stopPropagation();">
                 </td>
+                @endif
                 @foreach($columns as $column)
                     @if(!in_array($column, $hiddenColumns))
                         <td class="px-4 py-3 border text-sm text-gray-700">
