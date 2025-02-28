@@ -2,8 +2,7 @@
     <span class="text-sm text-gray-600">
         {{ __('datatable::datatables.page') }} {{ $currentPage }} {{ __('datatable::datatables.of') }} {{ $rows->lastPage() }} - {{ $rows->total() }} {{ __('datatable::datatables.results') }}
     </span>
-
-    <div class="flex gap-2">
+    <div class="hidden md:flex gap-2">
         <button wire:click="previousPage"
                 class="px-4 py-2 rounded {{ $currentPage === 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-200 text-gray-700' }}"
                 {{ $currentPage === 1 ? 'disabled' : '' }}>
@@ -35,3 +34,5 @@
         </button>
     </div>
 </div>
+
+@includeIf('datatable::components.mobile.pagination')

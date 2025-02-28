@@ -247,7 +247,7 @@ class DataTableComponent extends Component
 
         $query->orderBy($this->sortColumn, $this->sortDirection);
 
-
+        // Handmatige paginatie zonder Livewire’s paginate() (voorkomt URL-updates)
         $total = $query->count();
         $rows = $query->skip(($this->currentPage - 1) * $this->perPage)->take($this->perPage)->get();
 
@@ -259,30 +259,19 @@ class DataTableComponent extends Component
         );
     }
 
-    /**
-     * Navigate to a specific page without modifying the URL.
-     *
-     * @param int $page The page number to navigate to.
-     */
     public function gotoPage(int $page): void
     {
-        $this->setPage($page, $this->getPaginationName());
+        $this->currentPage = max(1, min($page, $this->getRows()->lastPage()));
     }
 
-    /**
-     * Navigate to the previous page.
-     */
     public function previousPage(): void
     {
-        $this->setPage($this->page - 1, $this->getPaginationName());
+        $this->currentPage = max(1, $this->currentPage - 1);
     }
 
-    /**
-     * Navigate to the next page.
-     */
     public function nextPage(): void
     {
-        $this->setPage($this->page + 1, $this->getPaginationName());
+        $this->currentPage = min($this->currentPage + 1, $this->getRows()->lastPage());
     }
 
     /**
