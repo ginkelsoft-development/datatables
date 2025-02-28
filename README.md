@@ -97,7 +97,7 @@ You can define various filters for refining results dynamically.
 ```blade
 :actions="[
     ['label' => 'Edit', 'route' => 'users.edit', 'class' => 'bg-green-500 text-white px-3 py-1 rounded'],
-    ['label' => 'Delete', 'route' => 'users.destroy', 'class' => 'bg-red-500 text-white px-3 py-1 rounded', 'onclick' => 'return confirm(\'Are you sure?\')']
+    ['label' => 'Delete', 'url' => 'users/{id}', 'class' => 'bg-red-500 text-white px-3 py-1 rounded', 'onclick' => 'return confirm(\'Are you sure?\')']
 ]"
 ```
 
