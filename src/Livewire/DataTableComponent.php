@@ -3,6 +3,7 @@
 namespace Ginkelsoft\DataTables\Livewire;
 
 use Ginkelsoft\DataTables\Action;
+use Ginkelsoft\DataTables\Factories\FilterFactory;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Ginkelsoft\DataTables\Search;
@@ -31,7 +32,8 @@ class DataTableComponent extends Component
     /** @var string The Blade view file for displaying row actions */
     public string $actionsView = 'datatable::actions';
 
-    /** @var string The search query entered by the user */
+        /** @var string The search query entered by the user */
+    #[\Livewire\Attributes\Url(history: true)]
     public string $search = '';
 
     /** @var string The column used for sorting */
@@ -70,7 +72,7 @@ class DataTableComponent extends Component
     public int $currentPage = 1;
 
     /** @var array Livewire event listeners */
-    protected $listeners = ['refreshTable' => '$refresh'];
+    protected $listeners = ['refreshTable' => '$refresh', 'searchUpdated' => 'applySearch'];
 
     /**
      * Mount the DataTable component.
@@ -99,7 +101,10 @@ class DataTableComponent extends Component
         $this->actionsView = $actionsView;
         $this->hiddenColumns = $hiddenColumns;
         $this->bulkActions = $bulkActions;
-        $this->filters = $filters;
+        $this->filters = collect($filters)
+            ->map(fn($filter) => FilterFactory::make($filter)->toArray())
+            ->collapse()
+            ->toArray();
     }
 
     /**
@@ -159,6 +164,11 @@ class DataTableComponent extends Component
         $this->showSelectAllModal = false; // 🔥 Sluit modal na selectie
     }
 
+    public function applySearch(): void
+    {
+        $this->resetPage();
+    }
+
     /**
      * Cancel the select-all action and reset selection.
      */
@@ -176,23 +186,6 @@ class DataTableComponent extends Component
     public function updatePerPage(int $value): void
     {
         $this->perPage = $value;
-        $this->resetPage();
-    }
-
-    /**
-     * Apply search filter and reset pagination.
-     */
-    public function applySearch(): void
-    {
-        $this->resetPage();
-    }
-
-    /**
-     * Reset the search input and pagination.
-     */
-    public function resetSearch(): void
-    {
-        $this->search = '';
         $this->resetPage();
     }
 
@@ -240,10 +233,12 @@ class DataTableComponent extends Component
             (new Search())->setSearch($this->search)->apply($query, $this->columns);
         }
 
-        foreach ($this->filters as $column => $filter) {
-            if (!empty($filter['value'])) {
-                $query->where($column, 'like', "%{$filter['value']}%");
-            }
+        $filters = collect($this->filters)
+            ->filter(fn($filter, $key) => is_array($filter) && is_string($key) && isset($filter['type']))
+            ->map(fn($filter, $key) => FilterFactory::make(array_merge(["column" => $key], $filter))); // ✅ Voeg de column key toe
+
+        foreach ($filters as $filter) {
+            $query = $filter->apply($query);
         }
 
         $query->orderBy($this->sortColumn, $this->sortDirection);

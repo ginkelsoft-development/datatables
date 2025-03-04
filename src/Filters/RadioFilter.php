@@ -10,7 +10,7 @@ use Ginkelsoft\DataTables\Filter;
  *
  * A filter for handling dropdown (select) filtering in a DataTable.
  */
-class SelectFilter extends Filter
+class RadioFilter extends Filter
 {
     /**
      * SelectFilter constructor.
@@ -21,7 +21,7 @@ class SelectFilter extends Filter
      */
     public function __construct(string $column, mixed $value = null, array $options = [], string $label = '')
     {
-        parent::__construct($column, $value, 'select', $options, $label);
+        parent::__construct($column, $value, 'radio', $options, $label);
     }
 
     /**

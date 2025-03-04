@@ -18,9 +18,9 @@ class DateFilter extends Filter
      * @param string $column The column to filter.
      * @param string|null $date The selected date (default: null).
      */
-    public function __construct(string $column, ?string $date = null)
+    public function __construct(string $column, ?string $date = null, string $label = '')
     {
-        parent::__construct($column, $date, 'date');
+        parent::__construct($column, $date, 'date', [], $label);
     }
 
     /**
@@ -31,7 +31,9 @@ class DateFilter extends Filter
      */
     public function apply(Builder $query): Builder
     {
-        if (!empty($this->value)) {
+        $value = $this->getValue();
+
+        if (!empty($value)) {
             $query->whereDate($this->column, '=', $this->value);
         }
 

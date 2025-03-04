@@ -18,11 +18,13 @@ class Filter
     /** @var string The type of filter (e.g., input, select, checkbox, date-range) */
     public string $type;
 
-    /** @var mixed The filter value */
-    public mixed $value;
+    /** @var mixed The raw filter value */
+    protected mixed $value;
 
     /** @var array Options for select and radio button filters */
     public array $options;
+
+    public string $label;
 
     /**
      * Filter constructor.
@@ -32,12 +34,52 @@ class Filter
      * @param string $type The type of filter (default: 'input').
      * @param array $options Options for select, radio, or other multi-choice filters.
      */
-    public function __construct(string $column, mixed $value = '', string $type = 'input', array $options = [])
+    public function __construct(string $column, mixed $value = '', string $type = 'input', array $options = [], string $label = '')
     {
+
         $this->column = $column;
-        $this->value = $value;
         $this->type = $type;
         $this->options = $options;
+        $this->setValue($value);
+        $this->label = $label ?: ucfirst(str_replace('_', ' ', $column));
+    }
+
+    /**
+     * Set the filter value.
+     *
+     * @param mixed $value
+     * @return void
+     */
+    public function setValue(mixed $value): void
+    {
+        $this->value = !is_string($value) ? json_decode($value, true) : $value;
+    }
+
+    /**
+     * Get the filter value.
+     *
+     * @return mixed
+     */
+    public function getValue(): mixed
+    {
+        return $this->value;
+    }
+
+    /**
+     * Convert the filter to an array format.
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            $this->column => [
+                'type' => $this->type,
+                'value' => $this->getValue(), // ✅ Correcte waarde
+                'options' => $this->options,
+                'label' => $this->label,
+            ]
+        ];
     }
 
     /**
@@ -48,36 +90,6 @@ class Filter
      */
     public function apply(Builder $query): Builder
     {
-        if (!empty($this->value)) {
-            switch ($this->type) {
-                case 'select':
-                    $query->where($this->column, $this->value);
-                    break;
-
-                case 'checkbox':
-                    $query->where($this->column, '=', (bool) $this->value);
-                    break;
-
-                case 'radio':
-                    $query->where($this->column, '=', $this->value);
-                    break;
-
-                case 'date-range':
-                    if (is_array($this->value)) {
-                        if (!empty($this->value['from'])) {
-                            $query->whereDate($this->column, '>=', $this->value['from']);
-                        }
-                        if (!empty($this->value['to'])) {
-                            $query->whereDate($this->column, '<=', $this->value['to']);
-                        }
-                    }
-                    break;
-
-                default:
-                    $query->where($this->column, 'like', "%{$this->value}%");
-                    break;
-            }
-        }
         return $query;
     }
 }
