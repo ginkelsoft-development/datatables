@@ -10,7 +10,7 @@ use Ginkelsoft\DataTables\Filter;
  *
  * A specialized filter for handling boolean (true/false) values using checkboxes.
  */
-class BooleanFilter extends Filter
+class CheckboxFilter extends Filter
 {
     /**
      * BooleanFilter constructor.
@@ -18,9 +18,9 @@ class BooleanFilter extends Filter
      * @param string $column The column to filter.
      * @param bool|null $value The boolean value to filter by (default: null).
      */
-    public function __construct(string $column, ?bool $value = null)
+    public function __construct(string $column, ?bool $value = null, string $label = '')
     {
-        parent::__construct($column, $value, 'checkbox');
+        parent::__construct($column, $value, 'checkbox', [], $label);
     }
 
     /**
@@ -31,7 +31,9 @@ class BooleanFilter extends Filter
      */
     public function apply(Builder $query): Builder
     {
-        if (!is_null($this->value)) {
+        $value = $this->getValue();
+
+        if (!empty($value)) {
             $query->where($this->column, (bool) $this->value);
         }
 

@@ -16,11 +16,11 @@ class TextFilter extends Filter
      * TextFilter constructor.
      *
      * @param string $column The column to filter.
-     * @param mixed|null $value The search value (default: null).
+     * @param mixed|null $value The search value (default: '').
      */
-    public function __construct(string $column, mixed $value = null)
+    public function __construct(string $column, mixed $value = '', string $label = '')
     {
-        parent::__construct($column, $value, 'input');
+        parent::__construct($column, $value, 'input', [], $label);
     }
 
     /**
@@ -31,9 +31,13 @@ class TextFilter extends Filter
      */
     public function apply(Builder $query): Builder
     {
-        if (!empty($this->value)) {
-            $query->where($this->column, 'like', "%{$this->value}%");
+        $value = $this->getValue();
+
+        if (!empty($value)) {
+            $query->where($this->column, 'like', "%{$value}%");
         }
+
+        // dd($this->value, $query->get());
 
         return $query;
     }
