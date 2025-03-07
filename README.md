@@ -1,4 +1,4 @@
-# Ginkelsoft DataTables version 0.0.9
+# Ginkelsoft DataTables version 0.0.10
 
 Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular data in Laravel projects. This package **requires Livewire** for dynamic, AJAX-driven experiences. You can easily add filtering, searching, sorting, and bulk actions with minimal setup.
 
