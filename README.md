@@ -2,6 +2,13 @@
 
 Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular data in Laravel projects. This package **requires Livewire** for dynamic, AJAX-driven experiences. You can easily add filtering, searching, sorting, and bulk actions with minimal setup.
 
+## Documentation
+
+The official documentation is now available at:
+
+- [Ginkelsoft DataTables Website](https://datatables.ginkelsoft.com/)
+- [Full Documentation](https://datatables.ginkelsoft.com/docs)
+
 ---
 
 ## Table of Contents
@@ -11,7 +18,7 @@ Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular
 3. [Usage With Livewire](#usage-with-livewire)
 4. [Filters](#filters)
 5. [Sorting](#sorting)
-6. [Actions & Bulk Actions](#actions--bulk-actions)
+6. [Row Actions & Bulk Actions](#row-actions--bulk-actions)
 7. [Additional Features](#additional-features)
 8. [Contributing](#contributing)
 9. [License](#license)
@@ -37,13 +44,13 @@ Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular
 2. **Publish the package views** (optional) for customization:
 
    ```bash
-   php artisan vendor:publish --provider="Ginkelsoft\\DataTables\\DataTableServiceProvider" --tag=views
+   php artisan vendor:publish --provider="Ginkelsoft\DataTables\DataTableServiceProvider" --tag=views
    ```
 
 3. **Publish configuration file** (optional) for customization:
 
    ```bash
-   php artisan vendor:publish --provider="Ginkelsoft\DataTables\Providers\GinkelsoftDataTableServiceProvider" --tag=config
+   php artisan vendor:publish --provider="Ginkelsoft\DataTables\DataTableServiceProvider" --tag=config
    ```
 
 ---
@@ -54,19 +61,17 @@ This package **requires Livewire** and cannot be used without it. To integrate D
 
 ```blade
 <livewire:datatable
-    model="App\\Models\\User"
+    model="App\Models\User"
     :columns="['id', 'name', 'email', 'created_at']"
     :hidden-columns="['id']"
     :filters="[
         ['column' => 'name', 'type' => 'input', 'label' => 'Naam'],
         ['column' => 'email', 'type' => 'input', 'label' => 'Email'],
-        ['column' => 'created_at', 'type' => 'date', 'label' => 'Aangemaakt op'],
-        ['column' => 'email_verified_at', 'type' => 'checkbox', 'options' => ['1' => 'Verified', 'null' => 'Not Verified'], 'label' => 'Email bevestigd'],
-        ['column' => 'email_verified_at', 'type' => 'select', 'options' => ['1' => 'Verified', 'null' => 'Not Verified'], 'label' => 'Email bevestigd'],
+        ['column' => 'created_at', 'type' => 'date', 'label' => 'Aangemaakt op']
     ]"
-    :rows-actions="[
-        ['name' => 'edit', 'label' => 'Edit', 'route' => 'users.datatable.export'],
-        ['name' => 'delete', 'label' => 'Delete', 'route' => 'users.datatable.export'],
+    :row-actions="[
+        ['name' => 'edit', 'label' => 'Edit', 'route' => 'users.datatable.edit'],
+        ['name' => 'delete', 'label' => 'Delete', 'route' => 'users.datatable.delete'],
         ['name' => 'view', 'label' => 'View Profile', 'url' => '/users/{id}']
     ]"
     :bulk-actions="[
@@ -74,14 +79,6 @@ This package **requires Livewire** and cannot be used without it. To integrate D
     ]"
 />
 ```
-
-You can now:
-
-- **Search**&#x20;
-- **Sort** by clicking column headers.
-- **Paginate** without page reload.
-- **Select rows** individually or choose to select all.
-- Filters
 
 ---
 
@@ -93,9 +90,7 @@ You can define various filters for refining results dynamically.
 :filters="[
     ['column' => 'name', 'type' => 'input', 'label' => 'Naam'],
     ['column' => 'email', 'type' => 'input', 'label' => 'Email'],
-    ['column' => 'created_at', 'type' => 'date', 'label' => 'Aangemaakt op'],
-    ['column' => 'email_verified_at', 'type' => 'checkbox', 'options' => ['1' => 'Verified', 'null' => 'Not Verified'], 'label' => 'Email bevestigd'],
-    ['column' => 'email_verified_at', 'type' => 'select', 'options' => ['1' => 'Verified', 'null' => 'Not Verified'], 'label' => 'Email bevestigd']
+    ['column' => 'created_at', 'type' => 'date', 'label' => 'Aangemaakt op']
 ]"
 ```
 
@@ -107,12 +102,10 @@ Sorting is enabled by default. Clickable column headers allow users to sort the 
 
 By default, sorting is applied to the first column in the `:columns` array. If needed, sorting can be applied programmatically by setting:
 
-```php
-'sortColumn' => 'created_at',
-'sortDirection' => 'desc',
+```blade
+:sort-column="'created_at'"
+:sort-direction="'desc'"
 ```
-
-Sorting is supported for all columns in the dataset, including text, dates, and booleans.
 
 ---
 
@@ -122,8 +115,8 @@ Sorting is supported for all columns in the dataset, including text, dates, and 
 
 ```blade
 :row-actions="[
-    ['label' => 'Edit', 'route' => 'users.edit', 'class' => 'bg-green-500 text-white px-3 py-1 rounded'],
-    ['label' => 'Delete', 'url' => 'users/{id}', 'class' => 'bg-red-500 text-white px-3 py-1 rounded', 'onclick' => 'return confirm(\'Are you sure?\')']
+    ['label' => 'Edit', 'route' => 'users.edit'],
+    ['label' => 'Delete', 'url' => 'users/{id}', 'onclick' => 'return confirm(\'Are you sure?\')']
 ]"
 ```
 
@@ -135,8 +128,6 @@ Sorting is supported for all columns in the dataset, including text, dates, and 
     'export' => ['label' => 'Export', 'route' => 'users.bulk.export']
 ]"
 ```
-
-When multiple rows are selected, the component redirects to the specified route with `ids` in the query/string, so you can handle them in your controller.
 
 ---
 
@@ -165,4 +156,14 @@ We welcome improvements to code quality, new features, or better documentation.
 ## License
 
 Ginkelsoft DataTables is open-sourced software licensed under the [MIT license](LICENSE).
+
+---
+
+### Version Changes
+
+**Changes in version 0.0.10:**
+- `actions` have been renamed to `row-actions`.
+- A new configuration file has been added.
+- Ensure the Livewire component is updated, otherwise, it will not work correctly.
+- Official documentation site launched: [https://datatables.ginkelsoft.com/](https://datatables.ginkelsoft.com/)
 
