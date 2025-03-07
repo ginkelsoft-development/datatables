@@ -29,10 +29,10 @@ class Filter
     /**
      * Filter constructor.
      *
-     * @param string $column The column to filter.
-     * @param mixed $value The initial value of the filter.
-     * @param string $type The type of filter (default: 'input').
-     * @param array $options Options for select, radio, or other multi-choice filters.
+     * @param  string  $column  The column to filter.
+     * @param  mixed  $value  The initial value of the filter.
+     * @param  string  $type  The type of filter (default: 'input').
+     * @param  array  $options  Options for select, radio, or other multi-choice filters.
      */
     public function __construct(string $column, mixed $value = '', string $type = 'input', array $options = [], string $label = '')
     {
@@ -46,19 +46,14 @@ class Filter
 
     /**
      * Set the filter value.
-     *
-     * @param mixed $value
-     * @return void
      */
     public function setValue(mixed $value): void
     {
-        $this->value = !is_string($value) ? json_decode($value, true) : $value;
+        $this->value = ! is_string($value) ? json_decode($value, true) : $value;
     }
 
     /**
      * Get the filter value.
-     *
-     * @return mixed
      */
     public function getValue(): mixed
     {
@@ -67,8 +62,6 @@ class Filter
 
     /**
      * Convert the filter to an array format.
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -78,14 +71,14 @@ class Filter
                 'value' => $this->getValue(), // ✅ Correcte waarde
                 'options' => $this->options,
                 'label' => $this->label,
-            ]
+            ],
         ];
     }
 
     /**
      * Apply the filter to the given query.
      *
-     * @param Builder $query The Eloquent query builder instance.
+     * @param  Builder  $query  The Eloquent query builder instance.
      * @return Builder The modified query with applied filters.
      */
     public function apply(Builder $query): Builder

@@ -5,9 +5,13 @@ namespace Ginkelsoft\DataTables;
 class Action
 {
     public string $name;
+
     public string $label;
+
     public ?string $route;
+
     public ?string $url;
+
     public array $attributes = [];
 
     /**
@@ -29,7 +33,7 @@ class Action
             'label' => $this->label,
             'route' => $this->route,
             'url' => $this->url,
-            'attributes' => $this->attributes
+            'attributes' => $this->attributes,
         ];
     }
 }

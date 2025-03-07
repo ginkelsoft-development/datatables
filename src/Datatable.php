@@ -14,29 +14,23 @@ class DataTable
 {
     /**
      * The Eloquent query builder instance.
-     *
-     * @var Builder
      */
     protected Builder $query;
 
     /**
      * The list of columns for the DataTable.
-     *
-     * @var array
      */
     protected array $columns = [];
 
     /**
      * The number of results per page.
-     *
-     * @var int
      */
     protected int $perPage = 10;
 
     /**
      * DataTable constructor.
      *
-     * @param Builder $query The Eloquent query builder instance.
+     * @param  Builder  $query  The Eloquent query builder instance.
      */
     public function __construct(Builder $query)
     {
@@ -46,24 +40,26 @@ class DataTable
     /**
      * Set the columns for the DataTable.
      *
-     * @param array $columns The array of column definitions.
+     * @param  array  $columns  The array of column definitions.
      * @return self Returns the current instance for method chaining.
      */
     public function setColumns(array $columns): self
     {
         $this->columns = $columns;
+
         return $this;
     }
 
     /**
      * Set the number of items per page.
      *
-     * @param int $perPage The number of results per page.
+     * @param  int  $perPage  The number of results per page.
      * @return self Returns the current instance for method chaining.
      */
     public function setPerPage(int $perPage): self
     {
         $this->perPage = $perPage;
+
         return $this;
     }
 

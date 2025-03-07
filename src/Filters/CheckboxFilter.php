@@ -2,8 +2,8 @@
 
 namespace Ginkelsoft\DataTables\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
 use Ginkelsoft\DataTables\Filter;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class BooleanFilter
@@ -15,8 +15,8 @@ class CheckboxFilter extends Filter
     /**
      * BooleanFilter constructor.
      *
-     * @param string $column The column to filter.
-     * @param bool|null $value The boolean value to filter by (default: null).
+     * @param  string  $column  The column to filter.
+     * @param  bool|null  $value  The boolean value to filter by (default: null).
      */
     public function __construct(string $column, ?bool $value = null, string $label = '')
     {
@@ -26,14 +26,14 @@ class CheckboxFilter extends Filter
     /**
      * Apply the boolean filter to the query.
      *
-     * @param Builder $query The Eloquent query builder instance.
+     * @param  Builder  $query  The Eloquent query builder instance.
      * @return Builder The modified query with the boolean filter applied.
      */
     public function apply(Builder $query): Builder
     {
         $value = $this->getValue();
 
-        if (!empty($value)) {
+        if (! empty($value)) {
             $query->where($this->column, (bool) $this->value);
         }
 

@@ -1,5 +1,10 @@
 # Ginkelsoft DataTables version 0.0.10
 
+![Tests](https://github.com/ginkelsoft/datatables/actions/workflows/tests.yml/badge.svg)
+![Downloads](https://img.shields.io/packagist/dt/ginkelsoft/datatables)
+![Packagist](https://img.shields.io/packagist/v/ginkelsoft/datatables)
+![License](https://img.shields.io/packagist/l/ginkelsoft/datatables)
+
 Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular data in Laravel projects. This package **requires Livewire** for dynamic, AJAX-driven experiences. You can easily add filtering, searching, sorting, and bulk actions with minimal setup.
 
 ## Documentation
@@ -61,7 +66,7 @@ This package **requires Livewire** and cannot be used without it. To integrate D
 
 ```blade
 <livewire:datatable
-    model="App\Models\User"
+    model="App\\Models\\User"
     :columns="['id', 'name', 'email', 'created_at']"
     :hidden-columns="['id']"
     :filters="[

@@ -24,21 +24,22 @@ class Sorting
     /**
      * Set the sorting preferences.
      *
-     * @param string $column The column name to sort by.
-     * @param string $direction The sort direction (default 'asc').
+     * @param  string  $column  The column name to sort by.
+     * @param  string  $direction  The sort direction (default 'asc').
      * @return self Returns the Sorting instance for method chaining.
      */
     public function setSorting(string $column, string $direction = 'asc'): self
     {
         $this->sortColumn = $column;
         $this->sortDirection = $direction;
+
         return $this;
     }
 
     /**
      * Apply sorting to the given query.
      *
-     * @param Builder $query The Eloquent query builder instance.
+     * @param  Builder  $query  The Eloquent query builder instance.
      * @return Builder The modified query with sorting applied.
      */
     public function apply(Builder $query): Builder

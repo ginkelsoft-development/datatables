@@ -2,8 +2,8 @@
 
 namespace Ginkelsoft\DataTables\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
 use Ginkelsoft\DataTables\Filter;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class SelectFilter
@@ -15,9 +15,9 @@ class RadioFilter extends Filter
     /**
      * SelectFilter constructor.
      *
-     * @param string $column The column to filter.
-     * @param mixed|null $value The selected value (default: null).
-     * @param array $options Available options for the select dropdown.
+     * @param  string  $column  The column to filter.
+     * @param  mixed|null  $value  The selected value (default: null).
+     * @param  array  $options  Available options for the select dropdown.
      */
     public function __construct(string $column, mixed $value = null, array $options = [], string $label = '')
     {
@@ -27,14 +27,14 @@ class RadioFilter extends Filter
     /**
      * Apply the select filter to the query.
      *
-     * @param Builder $query The Eloquent query builder instance.
+     * @param  Builder  $query  The Eloquent query builder instance.
      * @return Builder The modified query with the select filter applied.
      */
     public function apply(Builder $query): Builder
     {
         $value = $this->getValue();
 
-        if (!empty($value)) {
+        if (! empty($value)) {
             $query->where($this->column, '=', $this->value);
         }
 

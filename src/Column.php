@@ -22,10 +22,10 @@ class Column
     /**
      * Column constructor.
      *
-     * @param string $name The column name.
-     * @param string $label The column label (default: formatted name).
-     * @param bool $sortable Indicates if the column is sortable.
-     * @param bool $searchable Indicates if the column is searchable.
+     * @param  string  $name  The column name.
+     * @param  string  $label  The column label (default: formatted name).
+     * @param  bool  $sortable  Indicates if the column is sortable.
+     * @param  bool  $searchable  Indicates if the column is searchable.
      */
     public function __construct(string $name, string $label = '', bool $sortable = true, bool $searchable = true)
     {
@@ -38,12 +38,10 @@ class Column
     /**
      * Factory method to create a new Column instance.
      *
-     * @param string $name The column name.
-     * @param string $label The column label (optional).
-     * @param bool $sortable Indicates if the column is sortable (default: true).
-     * @param bool $searchable Indicates if the column is searchable (default: true).
-     *
-     * @return self
+     * @param  string  $name  The column name.
+     * @param  string  $label  The column label (optional).
+     * @param  bool  $sortable  Indicates if the column is sortable (default: true).
+     * @param  bool  $searchable  Indicates if the column is searchable (default: true).
      */
     public static function make(string $name, string $label = '', bool $sortable = true, bool $searchable = true): self
     {
