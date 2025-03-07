@@ -92,19 +92,26 @@ class DataTableComponent extends Component
         string $rowActionView = 'datatable::row-actions',
         array  $hiddenColumns = [],
         array  $bulkActions = [],
-        array  $filters = []
+        array  $filters = [],
+        string $sortColumn = '',
+        string $sortDirection = '',
+        string $perPage = '',
     ): void
     {
         $this->model = $model;
         $this->columns = $columns;
         $this->rowAction = array_map(fn($action) => $action instanceof Action ? $action->toArray() : $action, $rowActions);
-        $this->rowActionView = $rowActionView;
-        $this->hiddenColumns = $hiddenColumns;
+        $this->rowActionView = $rowActionView ?: config('datatable.row_actions.view');
+        $this->hiddenColumns = $hiddenColumns ?: config('datatable.columns.hidden');
         $this->bulkActions = $bulkActions;
         $this->filters = collect($filters)
             ->map(fn($filter) => FilterFactory::make($filter)->toArray())
             ->collapse()
             ->toArray();
+
+        $this->sortColumn = $sortColumn ?: config('datatable.sort.column');
+        $this->sortDirection = $sortDirection ?: config('datatable.sort.direction');
+        $this->perPage = $perPage ?: config('datatable.per_page.default');
     }
 
     /**

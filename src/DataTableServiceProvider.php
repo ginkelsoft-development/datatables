@@ -16,6 +16,7 @@ class DataTableServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->mergeConfigFrom(__DIR__ . '/../config/datatable.php', 'datatable');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang/vendor/datatables', 'datatable');
         $this->loadViewsFrom(__DIR__ . '/../resources/views/vendor/datatables', 'datatable');
     }
@@ -30,6 +31,13 @@ class DataTableServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->publishes([
+            __DIR__ . '/../config/datatable.php' => config_path('datatable.php'),
+        ], 'config');
+
+        // Merge default config if not published
+        $this->mergeConfigFrom(__DIR__ . '/../config/datatable.php', 'datatable');
+
         $this->publishes([
             __DIR__ . '/../resources/views' => resource_path('views/vendor/datatables'),
         ], 'views');
