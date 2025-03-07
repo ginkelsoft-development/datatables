@@ -40,6 +40,12 @@ Ginkelsoft DataTables is a flexible and easy-to-use package for managing tabular
    php artisan vendor:publish --provider="Ginkelsoft\\DataTables\\DataTableServiceProvider" --tag=views
    ```
 
+3. **Publish configuration file** (optional) for customization:
+
+   ```bash
+   php artisan vendor:publish --provider="Ginkelsoft\DataTables\Providers\GinkelsoftDataTableServiceProvider" --tag=config
+   ```
+
 ---
 
 ## Usage With Livewire
