@@ -1,6 +1,5 @@
 # Ginkelsoft DataTables version 0.0.10
 
-![Tests](https://github.com/ginkelsoft/datatables/actions/workflows/tests.yml/badge.svg)
 ![Downloads](https://img.shields.io/packagist/dt/ginkelsoft/datatables)
 ![Packagist](https://img.shields.io/packagist/v/ginkelsoft/datatables)
 ![License](https://img.shields.io/packagist/l/ginkelsoft/datatables)
