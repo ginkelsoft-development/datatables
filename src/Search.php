@@ -41,7 +41,7 @@ class Search
         if (!empty($this->searchTerm)) {
             $query->where(function (Builder $q) use ($columns) {
                 foreach ($columns as $column) {
-                    $q->orWhere($column, 'like', "%{$this->searchTerm}%");
+                    $q->orWhere($column['column'], 'like', "%{$this->searchTerm}%");
                 }
             });
         }

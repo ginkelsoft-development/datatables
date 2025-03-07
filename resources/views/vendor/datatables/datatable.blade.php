@@ -30,7 +30,6 @@
                     @includeIf('datatable::components.bulk-action')
                 </div>
             @endif
-
         </div>
 
         <div class="overflow-x-auto">

@@ -58,12 +58,12 @@ This package **requires Livewire** and cannot be used without it. To integrate D
         ['column' => 'email_verified_at', 'type' => 'checkbox', 'options' => ['1' => 'Verified', 'null' => 'Not Verified'], 'label' => 'Email bevestigd'],
         ['column' => 'email_verified_at', 'type' => 'select', 'options' => ['1' => 'Verified', 'null' => 'Not Verified'], 'label' => 'Email bevestigd'],
     ]"
-    :actions="[
+    :rows-actions="[
         ['name' => 'edit', 'label' => 'Edit', 'route' => 'users.datatable.export'],
         ['name' => 'delete', 'label' => 'Delete', 'route' => 'users.datatable.export'],
         ['name' => 'view', 'label' => 'View Profile', 'url' => '/users/{id}']
     ]"
-    :bulkActions="[
+    :bulk-actions="[
         'export' => ['label' => 'Export', 'route' => 'users.datatable.export']
     ]"
 />
@@ -110,12 +110,12 @@ Sorting is supported for all columns in the dataset, including text, dates, and 
 
 ---
 
-## Actions & Bulk Actions
+## Row Actions & Bulk Actions
 
 ### Row Actions
 
 ```blade
-:actions="[
+:row-actions="[
     ['label' => 'Edit', 'route' => 'users.edit', 'class' => 'bg-green-500 text-white px-3 py-1 rounded'],
     ['label' => 'Delete', 'url' => 'users/{id}', 'class' => 'bg-red-500 text-white px-3 py-1 rounded', 'onclick' => 'return confirm(\'Are you sure?\')']
 ]"
@@ -124,7 +124,7 @@ Sorting is supported for all columns in the dataset, including text, dates, and 
 ### Bulk Actions
 
 ```blade
-:bulkActions="[
+:bulk-actions="[
     'delete' => ['label' => 'Delete', 'route' => 'users.bulk.delete'],
     'export' => ['label' => 'Export', 'route' => 'users.bulk.export']
 ]"

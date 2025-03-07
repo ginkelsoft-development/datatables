@@ -27,10 +27,10 @@ class DataTableComponent extends Component
     public array $columns = [];
 
     /** @var array List of actions available for each row */
-    public array $actions = [];
+    public array $rowActions = [];
 
     /** @var string The Blade view file for displaying row actions */
-    public string $actionsView = 'datatable::actions';
+    public string $rowActionView = 'datatable::row-actions';
 
         /** @var string The search query entered by the user */
     #[\Livewire\Attributes\Url(history: true)]
@@ -79,8 +79,8 @@ class DataTableComponent extends Component
      *
      * @param string $model The model class name.
      * @param array $columns List of table columns.
-     * @param array $actions Row actions.
-     * @param string $actionsView Blade view for row actions.
+     * @param array rowActions
+     * @param string $rowActionView Blade view for row actions.
      * @param array $hiddenColumns Columns that should be hidden.
      * @param array $bulkActions Available bulk actions.
      * @param array $filters Initial filters.
@@ -88,8 +88,8 @@ class DataTableComponent extends Component
     public function mount(
         string $model,
         array  $columns,
-        array  $actions = [],
-        string $actionsView = 'datatable::actions',
+        array  $rowActions = [],
+        string $rowActionView = 'datatable::row-actions',
         array  $hiddenColumns = [],
         array  $bulkActions = [],
         array  $filters = []
@@ -97,8 +97,8 @@ class DataTableComponent extends Component
     {
         $this->model = $model;
         $this->columns = $columns;
-        $this->actions = array_map(fn($action) => $action instanceof Action ? $action->toArray() : $action, $actions);
-        $this->actionsView = $actionsView;
+        $this->rowAction = array_map(fn($action) => $action instanceof Action ? $action->toArray() : $action, $rowActions);
+        $this->rowActionView = $rowActionView;
         $this->hiddenColumns = $hiddenColumns;
         $this->bulkActions = $bulkActions;
         $this->filters = collect($filters)
@@ -319,8 +319,8 @@ class DataTableComponent extends Component
         return view('datatable::datatable', [
             'rows' => $this->getRows(),
             'columns' => $this->columns,
-            'actions' => $this->actions,
-            'actionsView' => $this->actionsView,
+            'rowActions' => $this->rowActions,
+            'rowActionView' => $this->rowActionView,
             'hiddenColumns' => $this->hiddenColumns,
             'selectedRows' => $this->selectedRows,
             'selectAll' => $this->selectAll,

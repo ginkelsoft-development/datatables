@@ -10,10 +10,10 @@
             </div>
             <div class="grid gap-2 text-sm text-gray-700">
                 @foreach($columns as $column)
-                    @if(!in_array($column, $hiddenColumns))
+                    @if(!in_array($column['column'], $hiddenColumns))
                         <div class="flex justify-between border-b pb-1">
-                            <strong>{{ $columnLabels[$column] ?? ucfirst(str_replace('_', ' ', $column)) }}:</strong>
-                            <span>{{ $row->$column }}</span>
+                            <strong>{{ ucfirst($column['column']) }}:</strong>
+                            <span>{{ $row->{$column['column']} }}</span>
                         </div>
                     @endif
                 @endforeach
@@ -21,7 +21,7 @@
 
             {{-- ✅ Acties onderaan voor mobiel --}}
             <div class="mt-3 flex flex-wrap gap-2">
-                @includeIf($actionsView, ['row' => $row])
+                @includeIf($rowActionView, ['row' => $row])
             </div>
         </div>
     @endforeach

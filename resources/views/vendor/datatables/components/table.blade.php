@@ -9,12 +9,12 @@
             </th>
             @endif
             @foreach($columns as $column)
-                @if(!in_array($column, $hiddenColumns))
+                @if(!in_array($column['column'], $hiddenColumns))
                     <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 border cursor-pointer hover:bg-gray-100 transition"
-                        wire:click="sortBy('{{ $column }}')">
+                        wire:click="sortBy('{{ $column['column'] }}')">
                         <div class="flex items-center">
-                            {{ $columnLabels[$column] ?? ucfirst(str_replace('_', ' ', $column)) }}
-                            @if ($sortColumn === $column)
+                            {{ ucfirst($column['label']) }}
+                            @if ($sortColumn === $column['column'])
                                 <span class="ml-2 text-blue-500">
                                     @if ($sortDirection === 'asc')
                                         ▲
@@ -45,14 +45,14 @@
                 </td>
                 @endif
                 @foreach($columns as $column)
-                    @if(!in_array($column, $hiddenColumns))
+                    @if(!in_array($column['column'], $hiddenColumns))
                         <td class="px-4 py-3 border text-sm text-gray-700">
-                            {{ $row->$column }}
+                            {{ $row->{$column['column']} }}
                         </td>
                     @endif
                 @endforeach
                 <td class="px-4 py-3 border">
-                    @includeIf($actionsView, ['row' => $row])
+                    @includeIf($rowActionView, ['row' => $row])
                 </td>
             </tr>
         @endforeach
