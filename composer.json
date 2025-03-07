@@ -22,5 +22,8 @@
         "DataTable": "Ginkelsoft\\DataTables\\Facades\\DataTable"
       }
     }
+  },
+  "require-dev": {
+    "laravel/pint": "^1.21"
   }
 }

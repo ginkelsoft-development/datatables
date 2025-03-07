@@ -2,12 +2,12 @@
 
 namespace Ginkelsoft\DataTables\Factories;
 
-use Ginkelsoft\DataTables\Filters\DateFilter;
-use Ginkelsoft\DataTables\Filters\TextFilter;
-use Ginkelsoft\DataTables\Filters\SelectFilter;
-use Ginkelsoft\DataTables\Filters\CheckboxFilter;
-use Ginkelsoft\DataTables\Filters\RadioFilter;
 use Ginkelsoft\DataTables\Filter;
+use Ginkelsoft\DataTables\Filters\CheckboxFilter;
+use Ginkelsoft\DataTables\Filters\DateFilter;
+use Ginkelsoft\DataTables\Filters\RadioFilter;
+use Ginkelsoft\DataTables\Filters\SelectFilter;
+use Ginkelsoft\DataTables\Filters\TextFilter;
 
 class FilterFactory
 {

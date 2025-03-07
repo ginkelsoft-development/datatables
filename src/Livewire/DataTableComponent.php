@@ -4,11 +4,11 @@ namespace Ginkelsoft\DataTables\Livewire;
 
 use Ginkelsoft\DataTables\Action;
 use Ginkelsoft\DataTables\Factories\FilterFactory;
-use Livewire\Component;
-use Livewire\WithPagination;
 use Ginkelsoft\DataTables\Search;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 /**
  * Class DataTableComponent
@@ -32,7 +32,7 @@ class DataTableComponent extends Component
     /** @var string The Blade view file for displaying row actions */
     public string $rowActionView = 'datatable::row-actions';
 
-        /** @var string The search query entered by the user */
+    /** @var string The search query entered by the user */
     #[\Livewire\Attributes\Url(history: true)]
     public string $search = '';
 
@@ -77,35 +77,34 @@ class DataTableComponent extends Component
     /**
      * Mount the DataTable component.
      *
-     * @param string $model The model class name.
-     * @param array $columns List of table columns.
+     * @param  string  $model  The model class name.
+     * @param  array  $columns  List of table columns.
      * @param array rowActions
-     * @param string $rowActionView Blade view for row actions.
-     * @param array $hiddenColumns Columns that should be hidden.
-     * @param array $bulkActions Available bulk actions.
-     * @param array $filters Initial filters.
+     * @param  string  $rowActionView  Blade view for row actions.
+     * @param  array  $hiddenColumns  Columns that should be hidden.
+     * @param  array  $bulkActions  Available bulk actions.
+     * @param  array  $filters  Initial filters.
      */
     public function mount(
         string $model,
-        array  $columns,
-        array  $rowActions = [],
+        array $columns,
+        array $rowActions = [],
         string $rowActionView = 'datatable::row-actions',
-        array  $hiddenColumns = [],
-        array  $bulkActions = [],
-        array  $filters = [],
+        array $hiddenColumns = [],
+        array $bulkActions = [],
+        array $filters = [],
         string $sortColumn = '',
         string $sortDirection = '',
         string $perPage = '',
-    ): void
-    {
+    ): void {
         $this->model = $model;
         $this->columns = $columns;
-        $this->rowAction = array_map(fn($action) => $action instanceof Action ? $action->toArray() : $action, $rowActions);
+        $this->rowAction = array_map(fn ($action) => $action instanceof Action ? $action->toArray() : $action, $rowActions);
         $this->rowActionView = $rowActionView ?: config('datatable.row_actions.view');
         $this->hiddenColumns = $hiddenColumns ?: config('datatable.columns.hidden');
         $this->bulkActions = $bulkActions;
         $this->filters = collect($filters)
-            ->map(fn($filter) => FilterFactory::make($filter)->toArray())
+            ->map(fn ($filter) => FilterFactory::make($filter)->toArray())
             ->collapse()
             ->toArray();
 
@@ -119,13 +118,13 @@ class DataTableComponent extends Component
      */
     public function toggleFilters(): void
     {
-        $this->showFilters = !$this->showFilters;
+        $this->showFilters = ! $this->showFilters;
     }
 
     /**
      * Remove a specific filter by key.
      *
-     * @param string $filterKey The key of the filter to remove.
+     * @param  string  $filterKey  The key of the filter to remove.
      */
     public function removeFilter(string $filterKey): void
     {
@@ -151,14 +150,14 @@ class DataTableComponent extends Component
     /**
      * Confirm the selection of all rows or only visible rows.
      *
-     * @param string $mode 'all' selects all rows, 'visible' selects only the current page.
+     * @param  string  $mode  'all' selects all rows, 'visible' selects only the current page.
      */
     public function confirmSelectAll(string $mode): void
     {
         $query = app($this->model)::query();
 
-        if (!empty($this->search)) {
-            (new Search())->setSearch($this->search)->apply($query, $this->columns);
+        if (! empty($this->search)) {
+            (new Search)->setSearch($this->search)->apply($query, $this->columns);
         }
 
         if ($mode === 'all') {
@@ -188,7 +187,7 @@ class DataTableComponent extends Component
     /**
      * Update the number of rows per page.
      *
-     * @param int $value New number of rows per page.
+     * @param  int  $value  New number of rows per page.
      */
     public function updatePerPage(int $value): void
     {
@@ -199,7 +198,7 @@ class DataTableComponent extends Component
     /**
      * Update sorting order when a column header is clicked.
      *
-     * @param string $column The column to sort by.
+     * @param  string  $column  The column to sort by.
      */
     public function sortBy(string $column): void
     {
@@ -236,13 +235,13 @@ class DataTableComponent extends Component
     {
         $query = app($this->model)::query();
 
-        if (!empty($this->search)) {
-            (new Search())->setSearch($this->search)->apply($query, $this->columns);
+        if (! empty($this->search)) {
+            (new Search)->setSearch($this->search)->apply($query, $this->columns);
         }
 
         $filters = collect($this->filters)
-            ->filter(fn($filter, $key) => is_array($filter) && is_string($key) && isset($filter['type']))
-            ->map(fn($filter, $key) => FilterFactory::make(array_merge(["column" => $key], $filter))); // ✅ Voeg de column key toe
+            ->filter(fn ($filter, $key) => is_array($filter) && is_string($key) && isset($filter['type']))
+            ->map(fn ($filter, $key) => FilterFactory::make(array_merge(['column' => $key], $filter))); // ✅ Voeg de column key toe
 
         foreach ($filters as $filter) {
             $query = $filter->apply($query);
@@ -284,7 +283,7 @@ class DataTableComponent extends Component
      */
     protected function getPaginationName(): string
     {
-        return md5($this->model . implode(',', $this->columns));
+        return md5($this->model.implode(',', $this->columns));
     }
 
     /**
@@ -298,14 +297,14 @@ class DataTableComponent extends Component
 
         redirect()->route($this->bulkActions[$this->bulkAction]['route'], [
             'model' => $this->model,
-            'ids' => implode(',', $this->selectedRows)
+            'ids' => implode(',', $this->selectedRows),
         ]);
     }
 
     /**
      * Toggle selection of a single row.
      *
-     * @param int|string $rowId The row ID to toggle.
+     * @param  int|string  $rowId  The row ID to toggle.
      */
     public function toggleRowSelection($rowId): void
     {
@@ -334,7 +333,7 @@ class DataTableComponent extends Component
             'showSelectAllModal' => $this->showSelectAllModal,
             'bulkActions' => $this->bulkActions,
             'bulkAction' => $this->bulkAction,
-            'filters' => $this->filters
+            'filters' => $this->filters,
         ]);
     }
 }
