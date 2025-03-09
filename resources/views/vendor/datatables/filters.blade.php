@@ -17,7 +17,6 @@
                     {{ ucfirst(str_replace('_', ' ', $filter['column'])) }}:
                     <span class="font-semibold ml-1">{{ $filter['value'] }}</span>
 
-                    {{-- ❌ Sluitknopje om filter te verwijderen --}}
                     <button wire:click="removeFilter('{{ $key }}')"
                             class="ml-2 text-red-600 hover:text-red-800">
                         ✕
@@ -29,16 +28,18 @@
 
     <div x-show="open" x-cloak
          @click.away="open = false"
-         class="absolute left-0 mt-2 w-96 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-50 transition transform origin-top opacity-100 scale-100">
-        <div class="flex flex-wrap gap-4">
+         class="absolute left-0 mt-1 w-[32rem] bg-white border border-gray-300 rounded-lg shadow-lg p-6 z-50 transition transform origin-top opacity-100 scale-100">
+        <div class="grid grid-cols-1 gap-4">
             @foreach($filters as $column => $filter)
                 @if(isset($filter['type']))
-                    @includeIf("datatable::filters.types.{$filter['type']}", ['filter' => $filter])
+                    <div class="flex flex-col gap-1">
+                        @includeIf("datatable::filters.types.{$filter['type']}", ['filter' => $filter])
+                    </div>
                 @endif
             @endforeach
         </div>
 
-        <div class="mt-4 flex justify-end gap-2">
+        <div class="mt-6 flex justify-end gap-3">
             <button wire:click="applyFilters"
                     class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm shadow-sm transition">
                 {{ __('datatable::datatables.apply_filters') }}

@@ -49,7 +49,15 @@ class Filter
      */
     public function setValue(mixed $value): void
     {
-        $this->value = ! is_string($value) ? json_decode($value, true) : $value;
+        $this->value = $value;
+
+        if (is_string($this->value) && !empty($this->value)) {
+            $decodedValue = json_decode($this->value, true);
+
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $this->value = $decodedValue;
+            }
+        }
     }
 
     /**

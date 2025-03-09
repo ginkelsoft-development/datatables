@@ -4,6 +4,7 @@ namespace Ginkelsoft\DataTables\Factories;
 
 use Ginkelsoft\DataTables\Filter;
 use Ginkelsoft\DataTables\Filters\CheckboxFilter;
+use Ginkelsoft\DataTables\Filters\DateBetweenFilter;
 use Ginkelsoft\DataTables\Filters\DateFilter;
 use Ginkelsoft\DataTables\Filters\RadioFilter;
 use Ginkelsoft\DataTables\Filters\SelectFilter;
@@ -26,11 +27,7 @@ class FilterFactory
             'checkbox' => new CheckboxFilter($filter['column'], $filter['value'] ?? false, $filter['label'] ?? ''),
             'radio' => new RadioFilter($filter['column'], $filter['value'] ?? false, $filter['options'] ?? [], $filter['label'] ?? ''),
             'date' => new DateFilter($filter['column'], $filter['value'] ?? null, $filter['label'] ?? ''),
-            /*'date-between' => new DateBetweenFilter(
-                $filter['column'],
-                $filter['value']['from'] ?? null,
-                $filter['value']['to'] ?? null
-            ),*/
+            'date-between' => new DateBetweenFilter($filter['column'], $filter['value'] ?? [], $filter['label'] ?? ''),
             default => throw new \Exception("Unknown filter type: {$filter['type']}"),
         };
     }
